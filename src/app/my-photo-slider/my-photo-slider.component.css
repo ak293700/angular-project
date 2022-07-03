@@ -1,0 +1,63 @@
+.grid {
+  display: grid;
+  grid-template-columns: 4fr 2fr;
+  grid-template-rows: 1fr 4fr 4fr;
+  grid-gap: 1em;
+
+  width: 80%;
+  height: 400px !important;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  /*border: solid 2px #222;*/
+  /*border-radius: 2em;*/
+
+  /*background-color: #1976d2;*/
+  /*background: radial-gradient(blue, cornflowerblue);*/
+}
+
+.grid > app-my-photo{
+  border: solid 4px white;
+  border-radius: 2em;
+
+  grid-column: 1;
+  grid-row: 2 / -1;
+
+  background: radial-gradient(cornflowerblue, blue);
+}
+
+.grid > button {
+  width: 50%;
+  height: 70%;
+
+  grid-column: 2;
+
+  border: #ccc;
+  border-radius: 30%;
+  color: white;
+  box-shadow: inset 0 0 40px 20px cornflowerblue;
+  background: radial-gradient(blue, cornflowerblue);
+
+  margin: auto;
+}
+
+#title-div
+{
+  width: 100%;
+  height: 100%;
+
+  grid-column: 1 / -1;
+  grid-row: 1;
+
+  border: solid 4px white;
+  border-radius: 2em;
+
+  background: linear-gradient(red, darkred);
+
+  text-align: center;
+  color: black;
+  letter-spacing: 10px;
+  word-spacing: 20px;
+  margin: auto;
+}

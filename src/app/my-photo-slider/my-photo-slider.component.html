@@ -1,0 +1,22 @@
+<div class="img-container">
+  <div class="grid">
+    <div id="title-div"><h1>Just a carousel</h1></div>
+    <app-my-photo
+      [imgUrl]="photoUrls[index]">
+    </app-my-photo>
+    <button id="carousel-previous"
+            style="grid-row: 2;"
+            (click)="OnClickCarousel(-1)"
+            (mouseenter)='OnMouseEnter("previous")'
+            (mouseleave)='OnMouseExit("previous")'>Previous</button>
+    <button
+      id="carousel-next"
+      style="grid-row: 3;"
+      (click)="OnClickCarousel(1)"
+      (mouseenter)='OnMouseEnter("next")'
+      (mouseleave)='OnMouseExit("next")'>Next</button>
+  </div>
+
+  <!-- Old version of the button <button (click)="OnClickCarousel(-1)">Previous</button>
+ <button style="left: 175px" (click)="OnClickCarousel(1)">Next</button !-->
+</div>
