@@ -8,8 +8,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MyPhotoSliderComponent } from './my-photo-slider/my-photo-slider.component';
-import { MyPhotoComponent } from './my-photo/my-photo.component';
 import { FlickrFormComponent } from './flickr-form/flickr-form.component';
 import { RoutingAppComponent } from './routing-app/routing-app.component';
 import { ButtonModule } from "primeng/button";
@@ -19,6 +17,8 @@ import {InputTextareaModule} from "primeng/inputtextarea";
 import {DropdownModule} from "primeng/dropdown";
 import { GalleryComponent } from './gallery/gallery.component';
 import {GalleriaModule} from "primeng/galleria";
+import {DialogModule} from "primeng/dialog";
+import {OrderListModule} from "primeng/orderlist";
 
 const appRoutes: Routes = [
   { path:'', redirectTo: '/form', pathMatch: 'full'},
@@ -30,8 +30,6 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    MyPhotoSliderComponent,
-    MyPhotoComponent,
     FlickrFormComponent,
     RoutingAppComponent,
     GalleryComponent
@@ -49,10 +47,11 @@ const appRoutes: Routes = [
     ToggleButtonModule,
     InputTextareaModule,
     DropdownModule,
-    GalleriaModule
+    GalleriaModule,
+    DialogModule,
+    OrderListModule
   ],
   providers: [],
-  // bootstrap: [AppComponent]
   bootstrap: [RoutingAppComponent]
 })
 export class AppModule { }

@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {HttpErrorResponse} from "@angular/common/http";
-import {PhotoUrlsService} from "../services/photo-urls.service";
-import {FormMessage, FormMessageService} from "../form-message.service";
-import {lastValueFrom, Subscription} from "rxjs";
-import {MyHttpRequest} from "../utils/MyHttpRequest";
+import {Component, OnInit, ViewChild} from '@angular/core';
+import { FormMessage, FormMessageService } from "../form-message.service";
+import { lastValueFrom, Subscription } from "rxjs";
+import { MyHttpRequest } from "../utils/MyHttpRequest";
+import api_key from "../../assets/api_key.json";
+
 
 export interface FlickrPhotoSearchResponse {
   photos: {
@@ -12,15 +12,15 @@ export interface FlickrPhotoSearchResponse {
     perpage: number;
     total: number;
     photo: {
-      id?: string;
-      owner?: string;
-      secret?: string;
-      server?: string;
-      farm?: number;
-      title?: string;
-      ispublic?: number;
-      isfriend?: number;
-      isfamily?: number;
+      id: string;
+      owner: string;
+      secret: string;
+      server: string;
+      farm: number;
+      title: string;
+      ispublic: number;
+      isfriend: number;
+      isfamily: number;
     };
   }
 }
@@ -33,54 +33,69 @@ export interface FlickrPhotoSearchResponse {
 export class GalleryComponent implements OnInit {
   // The form
   formMessage: FormMessage | undefined;
-  pageNumber: number = 1;
 
   // Gallery
-  images : string[] = [];
-  activeIndex: number = 0;
-  displayCustom: boolean = false;
-  responsiveOptions:any[] = [
-    {
-      breakpoint: '1024px',
-      numVisible: 5
-    },
-    {
-      breakpoint: '768px',
-      numVisible: 3
-    },
-    {
-      breakpoint: '560px',
-      numVisible: 1
-    }
-  ];
+  images: string[] = [];
+  photoResponse: FlickrPhotoSearchResponse | undefined;
+
+  // Overlay
+  overlayVisible: boolean = false;
+  overlayElement: {property: string, field: string}[] = [];
+  overlayDescription: string = "";
+
 
   formSubscription: Subscription;
-  constructor(private photoUrlsService: PhotoUrlsService, private formMessageService: FormMessageService, private http: MyHttpRequest ) {
-    this.formSubscription = this.formMessageService.onMessage().subscribe((message : FormMessage) => {
-      console.log('OnMessage')
+  constructor(public formMessageService: FormMessageService, private http: MyHttpRequest ) {
+    this.formSubscription = this.formMessageService
+      .onMessage().subscribe((message : FormMessage) => {
       if (message !== undefined) {
         this.formMessage = message;
         this.loadData();
+        formMessageService.clearMessage();
       }
     });
   }
 
-  ngOnInit(): void {
-    this.photoUrlsService.getPhotoUrls()
-      .subscribe((data : any) => {
-          this.images = data.photoUrls;
-        }
-        , (err: HttpErrorResponse) => {
-          if (err.error instanceof Error)
-            console.log("Error Client side")
-          else
-            console.log("Error Server side")
-        });
-  }
+  ngOnInit(): void {}
 
-  imageClick(index: number) {
-    this.activeIndex = index;
-    this.displayCustom = true;
+
+  async imageClick(index: number) {
+    this.overlayElement = [];
+    this.overlayDescription = "";
+
+    if (index < 1 || index > this.images.length)
+      return;
+
+    let queryParams: any = [
+        { key: "method", value: "flickr.photos.getInfo" }
+      , { key: "format", value: "json" }
+      , { key: "nojsoncallback", value: 1 }
+      , { key: "api_key", value: api_key.api_key }
+      // @ts-ignore
+      , { key: "photo_id", value: this.photoResponse.photos.photo[index].id }
+    ];
+    let infos = await lastValueFrom(this.http.get<any>('https://www.flickr.com/services/rest/', queryParams, 'json'));
+
+    if (infos === undefined || infos.photo === undefined) {
+      console.log('infos is undefined');
+      return;
+    }
+
+    let photo = infos.photo;
+
+    if (photo.dateuploaded !== undefined)
+      this.overlayElement.push({property: "Date d'upload", field: new Date(photo.dateuploaded * 1000).toLocaleString()});
+
+    if (photo.location !== undefined && photo.location.country !== undefined)
+      this.overlayElement.push({property: "Pays", field: photo.location.country._content});
+
+    if (photo.comments !== undefined)
+      this.overlayElement.push({property: "Nombre de commentaires", field: photo.comments._content});
+
+    if (photo.description !== undefined)
+      this.overlayDescription = '<div>' + photo.description._content + '</div>';
+
+    this.overlayVisible = true;
   }
 
   async loadData() {
@@ -88,46 +103,52 @@ export class GalleryComponent implements OnInit {
        { key: "method", value: "flickr.photos.search" }
       ,{ key: "format", value: "json" }
       ,{ key: "nojsoncallback", value: 1 }
-      ,{ key: "per_page", value: 1 }
     ];
+
     for (let key in this.formMessage) // @ts-ignore
       queryParams.push({key: key, value: this.formMessage[key]});
 
-    console.log('queryParams: ', queryParams);
-
     let response = await lastValueFrom(this.http.get<FlickrPhotoSearchResponse>('https://www.flickr.com/services/rest/'
       , queryParams, 'json'));
+
 
     if (response === undefined) {
       console.log('response is undefined');
       return;
     }
 
-    console.log('response', response);
+    this.photoResponse = response;
+    let images = [];
 
     // @ts-ignore
-    for (let photo of response.photos.photo)
-    {
-      console.log('photo', photo);
+    for (let photo of response.photos.photo) {
       // https://live.staticflickr.com/{server-id}/{id}_{secret}.jpg
-      let img = await lastValueFrom(this.http.get<any>(`https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`,
-        [], 'text'));
-      this.images.push(img);
-      this.images = [...this.images];
+      let src = `https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`;
+      images.push(src);
     }
+
+    this.images = images;
   }
 
-  previousPage() {
-    console.log("Previous page");
-    // @ts-ignore
-    this.formMessage?.page -= 1
-    this.loadData()
+  async previousPage() {
+    if (this.photoResponse === undefined || this.formMessage === undefined)
+      return;
+
+    if (this.formMessage.page === 1)
+      return;
+
+    this.formMessage.page -= 1
+    await this.loadData()
   }
 
-  nextPage() {
-    // @ts-ignore
-    this.formMessage?.page += 1
-    this.loadData()
-  }
+  async nextPage() {
+    if (this.photoResponse === undefined || this.formMessage === undefined)
+      return;
 
+    if (this.formMessage.page === this.photoResponse.photos.pages)
+      return;
+
+    this.formMessage.page += 1
+    await this.loadData();
+  }
 }

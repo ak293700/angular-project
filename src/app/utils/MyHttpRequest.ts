@@ -31,8 +31,6 @@ export class MyHttpRequest
       }
     }
 
-    console.log("url", url + queryParams);
-
     // @ts-ignore
     return this.http.get<T>(url + queryParams, { responseType: responseType });
   }

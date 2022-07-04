@@ -55,4 +55,26 @@
   margin: 6px;
 }
 
+.overlay {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin: 10px;
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+}
+
+.overlay > * {
+  margin: 5px;
+}
+
+.property {
+  font-family: 'Brush Script MT', cursive;
+  font-size: 30px;
+}
+
 
