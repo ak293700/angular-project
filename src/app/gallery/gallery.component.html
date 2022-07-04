@@ -1,8 +1,9 @@
 <a routerLink="/form">
-  <button pButton style="margin: 5px">Form</button>
+  <button pButton style="margin: 5px">Formulaire
+  </button>
 </a>
 
-<p class="title">Gallery</p>
+<p class="title">Gallerie</p>
 <p class="title" style="width: 25%; font-size: 20px;">Page:{{formMessage?.page || 1}}</p>
 
 
@@ -14,14 +15,13 @@
 </div>
 
 <div style="display: flex; justify-content: center">
-  <button pButton style="margin: 20px" (click)="previousPage()">Previous Page</button>
-  <button pButton style="margin: 20px" (click)="nextPage()">Next Page</button>
+  <button pButton style="margin: 20px" (click)="previousPage()">Page précédente</button>
+  <button pButton style="margin: 20px" (click)="nextPage()">Page suivante</button>
 </div>
 
 <p-dialog [(visible)]="overlayVisible" class="global" style="width: 50px">
   <p class="property">Information</p>
   <div *ngFor="let e of overlayElement" class="overlay">
-<!--    <p>{{e.property}}: {{e.field}}</p>-->
     <div class="property">{{e.property}}</div><div> {{e.field}}</div>
   </div>
   <div *ngIf="overlayDescription.length > 0" class="overlay">
