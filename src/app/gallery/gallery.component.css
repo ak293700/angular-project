@@ -1,3 +1,33 @@
+.title
+{
+  width: 50%;
+  height: 100%;
+
+  grid-column: 1 / -1;
+  grid-row: 1;
+
+  border: solid 4px white;
+  border-radius: 2em;
+
+  background: linear-gradient(orange, darkred);
+
+  text-align: center;
+  color: black;
+  letter-spacing: 10px;
+  word-spacing: 20px;
+  margin: auto;
+
+  font-size: 40px;
+}
+
+.resize
+{
+  object-fit: contain;
+  width: 100px;
+  max-height: 100%;
+  font-size: 40px;
+}
+
 .global {
   /* center the div in the screen*/
   display: flex;
@@ -11,20 +41,18 @@
 }
 
 .flex-gap {
-  width: 300px;
   display: flex;
   flex-wrap: wrap;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
 
   margin: 10px;
   padding: 10px;
-  border: 2px solid black;
-  border-radius: 5px;
 }
 
 .flex-gap > * {
   margin: 6px;
 }
+
 

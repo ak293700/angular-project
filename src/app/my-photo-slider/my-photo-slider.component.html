@@ -1,6 +1,6 @@
 <div class="img-container">
   <div class="grid">
-    <div id="title-div"><h1>Just a carousel</h1></div>
+    <div id="title-div"><h1>Flickr Carousel</h1></div>
     <app-my-photo
       [imgUrl]="photoUrls[index]">
     </app-my-photo>
@@ -16,7 +16,4 @@
       (mouseenter)='OnMouseEnter("next")'
       (mouseleave)='OnMouseExit("next")'>Next</button>
   </div>
-
-  <!-- Old version of the button <button (click)="OnClickCarousel(-1)">Previous</button>
- <button style="left: 175px" (click)="OnClickCarousel(1)">Next</button !-->
 </div>

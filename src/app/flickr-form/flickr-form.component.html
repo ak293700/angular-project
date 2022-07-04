@@ -1,26 +1,44 @@
-<div>
+<div class="global">
   <form class="form-horizontal" [formGroup]="searchForm" (ngSubmit)="OnSubmit(searchForm.value)">
 
-    <div class="form-group">
-        <label for="first_name" class="control-label">First Name</label>
-        <input id="first_name" type="text" placeholder="John" class="form-control" formControlName="first_name">
+    <div class="flex-gap">
+        <label class="control-label">Tags</label>
+        <input type="text" placeholder="Sport, Home" formControlName="tags">
     </div>
 
-    <div class="form-group">
-        <label for="first_name" class="control-label">Last Name</label>
-        <input id="last_name" type="text" placeholder="Doe" class="form-control" formControlName="last_name">
+    <div class="flex-gap">
+      <label>Text</label>
+      <textarea pInputTextarea id="text" type="text" placeholder="Squat" formControlName="text"></textarea>
     </div>
 
-    <div class="form-group">
-      <label for="first_name" class="control-label">Minimum Date</label>
-      <input id="min_date" type="date" class="form-control" formControlName="min_date">
+    <div class="flex-gap">
+      <label>Recherche safe</label>
+      <p-toggleButton onIcon="pi pi-check" offIcon="pi pi-times" formControlName="safe_search"></p-toggleButton>
     </div>
 
-    <div class="form-group">
-      <label for="first_name" class="control-label">Maximum Date</label>
-      <input id="max_date" type="date" class="form-control" formControlName="max_date">
+    <div class="flex-gap">
+      <label>Dans la gallerie</label>
+      <p-toggleButton onIcon="pi pi-check" offIcon="pi pi-times" formControlName="in_gallery"></p-toggleButton>
     </div>
 
-    <button type="submit" [disabled]="!searchForm.valid">Confirm</button>
+    <div class="flex-gap">
+      <label>Date minimum d'upload</label>
+      <p-calendar formControlName="min_upload_date"></p-calendar>
+    </div>
+
+    <div class="flex-gap">
+      <label>Date maximum d'upload</label>
+      <p-calendar formControlName="max_upload_date"></p-calendar>
+    </div>
+
+    <div class="flex-gap">
+      <label>Trier</label>
+      <p-dropdown formControlName="sort"
+                  [options]="['Date posted asc', 'Date posted desc',
+                  'Date taken asc', 'Date taken desc',
+                  'Interestingness asc', 'Interestingness desc']"></p-dropdown>
+    </div>
+
+    <button pButton type="submit" [disabled]="!searchForm.valid">Confirm</button>
   </form>
 </div>
