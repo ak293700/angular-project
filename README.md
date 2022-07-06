@@ -8,6 +8,7 @@ La page d'accueil est aussi l'endroit où vous pouvez mettre des filtres sur la 
 Une fois vos filtres appliqués, vous pouvez cliquer sur le bouton "Rechercher" pour afficher les résultats.
 
 
+
 ## Gallerie
 
 
